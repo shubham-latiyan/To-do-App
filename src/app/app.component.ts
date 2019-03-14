@@ -1,32 +1,78 @@
-import { Component } from '@angular/core';
+import { Component, AfterViewInit, ChangeDetectorRef } from '@angular/core';
 import { MatTableDataSource } from '@angular/material';
 
 export interface PeriodicElement {
-  name: string;
-  position: number;
-  weight: number;
-  symbol: string;
+  title: string;
+  date: number;
+  notes: string;
 }
-const ELEMENT_DATA: PeriodicElement[] = [
-  { position: 1, name: 'Hydrogen', weight: 1.0079, symbol: 'H' },
-  { position: 2, name: 'Helium', weight: 4.0026, symbol: 'He' },
-  { position: 3, name: 'Lithium', weight: 6.941, symbol: 'Li' },
-  { position: 4, name: 'Beryllium', weight: 9.0122, symbol: 'Be' },
-  { position: 5, name: 'Boron', weight: 10.811, symbol: 'B' },
-  { position: 6, name: 'Carbon', weight: 12.0107, symbol: 'C' },
-  { position: 7, name: 'Nitrogen', weight: 14.0067, symbol: 'N' },
-  { position: 8, name: 'Oxygen', weight: 15.9994, symbol: 'O' },
-  { position: 9, name: 'Fluorine', weight: 18.9984, symbol: 'F' },
-  { position: 10, name: 'Neon', weight: 20.1797, symbol: 'Ne' },
+const ELEMENT_DATA = [
+  { title: 'Just a sample task', date: 'Tue Mar 19 2019 00:00:00 GMT+0530 (India Standard Time)', notes: 'Sample text Note here', checked: false },
 ];
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent {
-  displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];
-  dataSource = new MatTableDataSource(ELEMENT_DATA);
+
+export class AppComponent implements AfterViewInit {
+  minDate = new Date();
+  dataArray: any = [];
+  ele: number = 0;
+  showForm: boolean = false;
+  showEditbtn: boolean = false;
+  number = 0;
+  obj = {
+    title: '',
+    date: '',
+    notes: '',
+    checked: false
+  }
+  constructor(private _cdr: ChangeDetectorRef) { }
+
+  ngAfterViewInit() {
+    this.minDate = new Date();
+    if (this.dataArray.length > 0) {
+      this.dataArray = this.dataArray;
+      this.dataSource = new MatTableDataSource(this.dataArray);
+    }
+    else {
+      this.dataSource = new MatTableDataSource(ELEMENT_DATA);
+    }
+    this._cdr.detectChanges();
+  }
+  displayedColumns: string[] = ['position', 'title', 'date', 'notes', 'done', 'edit'];
+  dataSource: MatTableDataSource<any>;
+
+  saveNotes() {
+    let date = this.obj.date;
+    this.obj['date'] = date;
+    this.dataArray.push(this.obj);
+    this.dataSource = new MatTableDataSource(this.dataArray);
+    this.showForm = false;
+    this.obj = {};
+  }
+
+  editNote(ele) {
+    this.ele = ele;
+    this.showEditbtn = true;
+    this.showForm = true;
+    console.log('ele:', ele)
+    this.obj.title = ele.title;
+    this.obj.date = ele.date;
+    this.obj.notes = ele.notes;
+    this.obj.checked = ele.checked;
+  }
+  editSave() {
+    this.showEditbtn = false;
+    this.dataArray.splice(this.dataArray.map(a => a.title).indexOf(this.ele), 1, this.obj)
+    this.dataSource = new MatTableDataSource(this.dataArray);
+  }
+  deleteNote(ele) {
+    this.ele = ele;
+    this.dataArray.splice(this.dataArray.map(a => a.title).indexOf(ele), 1)
+    this.dataSource = new MatTableDataSource(this.dataArray);
+  }
 
   applyFilter(filterValue: string) {
     this.dataSource.filter = filterValue.trim().toLowerCase();

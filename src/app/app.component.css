@@ -1,0 +1,37 @@
+table {
+  width: 50%;
+  margin-left: 380px;
+}
+
+.mat-form-field {
+  font-size: 14px;
+  width: 50%;
+}
+
+.formField{
+  margin-left: 380px;
+  margin-top: 40px
+}
+.example-button-row button,
+.example-button-row a {
+  margin-left: 380px;
+  margin-top: 20px
+}
+.example-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.example-container > * {
+  width: 50%;
+  margin-left: 380px;
+  margin-top: 20px
+}
+.editbtn {
+  background-color: rgb(75, 161, 75);
+  color: rgb(255, 255, 255)
+}
+.deletebtn {
+  background-color: rgb(194, 51, 46);
+  color: rgb(255, 255, 255)
+}
