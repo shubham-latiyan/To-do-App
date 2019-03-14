@@ -50,7 +50,12 @@ export class AppComponent implements AfterViewInit {
     this.dataArray.push(this.obj);
     this.dataSource = new MatTableDataSource(this.dataArray);
     this.showForm = false;
-    this.obj = {};
+    this.obj = {
+      title: '',
+      date: '',
+      notes: '',
+      checked: false
+    }
   }
 
   editNote(ele) {
